@@ -1,5 +1,5 @@
 ---
-title: Proxmox Cluster — Laptop Stack
+title: Proxmox Cluster - Laptop Stack
 tags: [homelab, proxmox, zfs, vlan, pbs, automation]
 last_updated: 2025-11-12
 ---
@@ -9,7 +9,7 @@ This template is GitHub-friendly Markdown (works in a repo README or MkDocs page
 Fill the placeholders in <angle brackets>. Remove sections you don’t need.
 -->
 
-# Proxmox Cluster — <Your Cluster Name>
+# Proxmox Cluster — pve-cluster-01
 
 **TL;DR:** 4-node Proxmox VE 8.x on repurposed laptops. Local **LVM-thin** on single SSD per node, flat network on `vmbr0` (`10.0.0.0/24`). Weekly **vzdump** to `NAS01` (Sun 03:00), retention **keep monthly: 2**, compression **ZSTD**. **Live migration:** QEMU VMs can migrate online without shared storage (disk is mirrored over the tunnel); expect longer migrations on 1G links. LXC typically needs downtime without shared storage.
 
