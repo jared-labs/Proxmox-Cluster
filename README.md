@@ -1,6 +1,5 @@
 ---
 title: Proxmox Cluster - Laptop Stack
-tags: [homelab, proxmox, zfs, vlan, pbs, automation]
 last_updated: 2025-11-12
 ---
 
