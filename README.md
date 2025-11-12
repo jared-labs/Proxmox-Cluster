@@ -53,12 +53,12 @@ Fill the placeholders in <angle brackets>. Remove sections you don’t need.
 
 ### Nodes
 
-| Node  | IP         | Cores | CPU Model                                      | RAM (GB) | SSD (GB) | NICs              | Role        | Notes                                  | On AC (Y/N) |
-|:-----:|------------|------:|-----------------------------------------------|---------:|---------:|-------------------|------------|----------------------------------------|:-----------:|
-| PVE01 | 10.0.0.140 | 4     | Intel(R) Core(TM) i5-6300U @ 2.40 GHz         | 16       | 256      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
-| PVE02 | 10.0.0.141 | 4     | Intel(R) Core(TM) i5-6300U @ 2.40 GHz         | 16       | 256      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
-| PVE03 | 10.0.0.142 | 4     | Intel(R) Core(TM) i5-3337U @ 1.80 GHz         | 4        | 128      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
-| PVE04 | 10.0.0.144 | 4     | Intel(R) Core(TM) i5-3337U @ 1.80 GHz         | 4        | 128      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
+| Node  | IP         | Cores | CPU Model | RAM (GB) | SSD (GB) | NICs              | Role        | Notes                                  | On AC (Y/N) |
+|:-----:|------------|------:|-----------|---------:|---------:|-------------------|------------|----------------------------------------|:-----------:|
+| PVE01 | 10.0.0.140 | 4     | i5-6300U  | 16       | 256      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
+| PVE02 | 10.0.0.141 | 4     | i5-6300U  | 16       | 256      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
+| PVE03 | 10.0.0.142 | 4     | i5-3337U  | 4        | 128      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
+| PVE04 | 10.0.0.144 | 4     | i5-3337U  | 4        | 128      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
 
 ### VMs / Services (Summary)
 
@@ -84,12 +84,12 @@ Fill the placeholders in <angle brackets>. Remove sections you don’t need.
 
 > Example from **PVE01** (others similar; sizes vary).
 
-| Node  | Disk Model (example)         | Size   | Partitioning                       | Volume Group | Datastore            | Notes                                        |
-|-------|-------------------------------|--------|------------------------------------|--------------|----------------------|----------------------------------------------|
-| PVE01 | Micron_1100_SATA_256GB       | 256 GB | BIOS boot, EFI, **LVM PV**         | `pve`        | `local-lvm` (thin)   | Serial: `18251D1A16A3` · Wearout: `19%`      |
-| PVE02 | Micron_1100_SATA_256GB       | 256 GB | BIOS boot, EFI, **LVM PV**         | `pve`        | `local-lvm` (thin)   | Serial: `18221CCE1A3F`                       |
-| PVE03 | SanDisk_SDSG2128G1052E       | 128 GB | BIOS boot, EFI, **LVM PV**         | `pve`        | `local-lvm` (thin)   | Serial: `134375402069`                       |
-| PVE04 | TOSHIBA_THNSNJ128GDNJ        | 128 GB | BIOS boot, EFI, **LVM PV**         | `pve`        | `local-lvm` (thin)   | Serial: `949B303KDD3X`                       |
+| Node  | Disk Model                 | Size   | Partitioning               | Volume Group | Datastore          |
+|-------|----------------------------|--------|----------------------------|--------------|--------------------|
+| PVE01 | Micron_1100_SATA_256GB     | 256 GB | BIOS boot, EFI, **LVM PV** | `pve`        | `local-lvm` (thin) |
+| PVE02 | Micron_1100_SATA_256GB     | 256 GB | BIOS boot, EFI, **LVM PV** | `pve`        | `local-lvm` (thin) |
+| PVE03 | SanDisk_SDSG2128G1052E     | 128 GB | BIOS boot, EFI, **LVM PV** | `pve`        | `local-lvm` (thin) |
+| PVE04 | TOSHIBA_THNSNJ128GDNJ      | 128 GB | BIOS boot, EFI, **LVM PV** | `pve`        | `local-lvm` (thin) |
 
 **Guardrail:** Alert if `local-lvm` (thin pool) free **<20%** to avoid “out of space” VM pauses.
 
