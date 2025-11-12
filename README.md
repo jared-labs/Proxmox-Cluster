@@ -64,7 +64,6 @@ Fill the placeholders in <angle brackets>. Remove sections you don’t need.
 
 | Node | IP         | Name     | Service / Purpose          |
 |:----:|------------|----------|----------------------------|
-| TBD  | 10.0.0.127 | CTMEL01  | Mealie.io                  |
 | TBD  | 10.0.0.128 | VMHA01   | HomeAssistant VM           |
 | TBD  | 10.0.0.129 | VMTAK01  | ATAK Server                |
 | TBD  | 10.0.0.130 | VMJS01   | Ubuntu Jump Station        |
