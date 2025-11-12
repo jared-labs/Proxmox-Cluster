@@ -13,7 +13,7 @@ Fill the placeholders in <angle brackets>. Remove sections you don’t need.
 **TL;DR:** 4-node Proxmox VE 8.x on repurposed laptops. Local **LVM-thin** on single SSD per node, flat network on `vmbr0` (`10.0.0.0/24`). Weekly **vzdump** to `NAS01` (Sun 03:00), retention **keep monthly: 2**, compression **ZSTD**. **Live migration:** QEMU VMs can migrate online without shared storage (disk is mirrored over the tunnel); expect longer migrations on 1G links. LXC typically needs downtime without shared storage.
 
 <!-- expected hero image: cluster-hero.jpg -->
-![Cluster overview](../assets/proxmox/cluster-hero.jpg)
+![Cluster overview](../cluster-hero.jpg)
 
 !!! note
     Network is **flat (no VLANs)**. VLAN sections are omitted on purpose.
