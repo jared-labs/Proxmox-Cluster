@@ -10,7 +10,7 @@ Fill the placeholders in <angle brackets>. Remove sections you don’t need.
 
 # Proxmox Cluster — pve-cluster-01
 
-**TL;DR:** 4-node Proxmox VE 8.x on repurposed laptops. Local **LVM-thin** on single SSD per node, flat network on `vmbr0` (`10.0.0.0/24`). Weekly **vzdump** to `NAS01` (Sun 03:00), retention **keep monthly: 2**, compression **ZSTD**. **Live migration:** QEMU VMs can migrate online without shared storage (disk is mirrored over the tunnel); expect longer migrations on 1G links. LXC typically needs downtime without shared storage.
+**TL;DR:** 5-node Proxmox VE 8.x on repurposed laptops. Local **LVM-thin** on single SSD per node, flat network on `vmbr0` (`10.0.0.0/24`). Weekly **vzdump** to `NAS01` (Sun 03:00), retention **keep monthly: 2**, compression **ZSTD**. **Live migration:** QEMU VMs can migrate online without shared storage (disk is mirrored over the tunnel); expect longer migrations on 1G links. LXC typically needs downtime without shared storage.
 
 <!-- expected hero image: cluster-hero.jpg -->
 ![Cluster overview](cluster.jpg)
@@ -22,9 +22,9 @@ Fill the placeholders in <angle brackets>. Remove sections you don’t need.
 
 ## At a Glance
 
-| Nodes | CPU/RAM (total)                           | Storage (raw)                   | Networks                          | Backups                                    | HA                     |
-|-----:|--------------------------------------------|---------------------------------|-----------------------------------|--------------------------------------------|------------------------|
-| 4    | i5-6300U ×2, i5-3337U ×2 / **40 GB** RAM   | 256+256+128+128 GB ≈ **768 GB** | `vmbr0` flat (`10.0.0.0/24`)      | vzdump → **NAS01**, Sun 03:00, keep monthly: 2, ZSTD | No (manual migrations) |
+| Nodes | CPU/RAM (total)                                      | Storage (raw)                             | Networks                          | Backups                                    | HA                     |
+|-----:|--------------------------------------------------------|-------------------------------------------|-----------------------------------|--------------------------------------------|------------------------|
+| 5    | i5-6300U ×2, i5-3337U ×2, i7-7500U ×1 / **56 GB** RAM | 256+256+128+128+512 GB ≈ **1.28 TB**      | `vmbr0` flat (`10.0.0.0/24`)      | vzdump → **NAS01**, Sun 03:00, keep monthly: 2, ZSTD | No (manual migrations) |
 
 **Use cases:** Mealie, Home Assistant, ATAK server, Ubuntu Jump Station, SmokePing, Zabbix, WireGuard, Wazuh, Omada SDN Controller, Chicken Coop Zigbee (MQTT), n8n.
 
@@ -58,6 +58,7 @@ Fill the placeholders in <angle brackets>. Remove sections you don’t need.
 | PVE02 | 10.0.0.141 | 4     | i5-6300U  | 16       | 256      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
 | PVE03 | 10.0.0.142 | 4     | i5-3337U  | 4        | 128      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
 | PVE04 | 10.0.0.144 | 4     | i5-3337U  | 4        | 128      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
+| PVE05 | 10.0.0.145 | 4     | i7-7500U  | 16       | 512      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
 
 ### VMs / Services (Summary)
 
@@ -88,6 +89,7 @@ Fill the placeholders in <angle brackets>. Remove sections you don’t need.
 | PVE02 | Micron_1100_SATA_256GB     | 256 GB | BIOS boot, EFI, **LVM PV** | `pve`        | `local-lvm` (thin) |
 | PVE03 | SanDisk_SDSG2128G1052E     | 128 GB | BIOS boot, EFI, **LVM PV** | `pve`        | `local-lvm` (thin) |
 | PVE04 | TOSHIBA_THNSNJ128GDNJ      | 128 GB | BIOS boot, EFI, **LVM PV** | `pve`        | `local-lvm` (thin) |
+| PVE05 | SanDisk_SD8SN8U-512G       | 512 GB | BIOS boot, EFI, **LVM PV** | `pve`        | `local-lvm` (thin) |
 
 **Guardrail:** Alert if `local-lvm` (thin pool) free **<20%** to avoid “out of space” VM pauses.
 
