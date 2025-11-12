@@ -73,7 +73,6 @@ Fill the placeholders in <angle brackets>. Remove sections you don’t need.
 | TBD  | 10.0.0.134 | VMWG01   | Wireguard                  |
 | TBD  | 10.0.0.135 | VMWAZ01  | Wazuh                      |
 | TBD  | 10.0.0.136 | CTOMD01  | Omada SDN Controller       |
-| TBD  | 10.0.0.137 | PIMQTT01 | Chicken Coop Zigbee Device |
 | TBD  | 10.0.0.138 | VMN8N    | N8N Server                 |
 
 ---
