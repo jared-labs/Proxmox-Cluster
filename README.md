@@ -1,6 +1,6 @@
 ---
 title: Proxmox Cluster - Laptop Stack
-last_updated: 2025-11-12
+last_updated: 2025-11-17
 ---
 
 <!--
@@ -10,7 +10,7 @@ Fill the placeholders in <angle brackets>. Remove sections you don’t need.
 
 # Proxmox Cluster — pve-cluster-01
 
-**TL;DR:** 5-node Proxmox VE 8.x on repurposed laptops. Local **LVM-thin** on single SSD per node, flat network on `vmbr0` (`10.0.0.0/24`). Weekly **vzdump** to `NAS01` (Sun 03:00), retention **keep monthly: 2**, compression **ZSTD**. **Live migration:** QEMU VMs can migrate online without shared storage (disk is mirrored over the tunnel); expect longer migrations on 1G links. LXC typically needs downtime without shared storage.
+**TL;DR:** 6-node Proxmox VE 8.x on repurposed laptops/desktops. Local **LVM-thin** on single SSD per node, flat network on `vmbr0` (`10.0.0.0/24`). Weekly **vzdump** to `NAS01` (Sun 03:00), retention **keep monthly: 2**, compression **ZSTD**. **Live migration:** QEMU VMs can migrate online without shared storage (disk is mirrored over the tunnel); expect longer migrations on 1G links. LXC typically needs downtime without shared storage.
 
 <!-- expected hero image: cluster-hero.jpg -->
 ![Cluster overview](cluster.jpg)
@@ -22,11 +22,11 @@ Fill the placeholders in <angle brackets>. Remove sections you don’t need.
 
 ## At a Glance
 
-| Nodes | CPU/RAM (total)                                      | Storage (raw)                             | Networks                          | Backups                                    | HA                     |
-|-----:|--------------------------------------------------------|-------------------------------------------|-----------------------------------|--------------------------------------------|------------------------|
-| 5    | i5-6300U ×2, i5-3337U ×2, i7-7500U ×1 / **56 GB** RAM | 256+256+128+128+512 GB ≈ **1.28 TB**      | `vmbr0` flat (`10.0.0.0/24`)      | vzdump → **NAS01**, Sun 03:00, keep monthly: 2, ZSTD | No (manual migrations) |
+| Nodes | CPU/RAM (total)                                               | Storage (raw)                                        | Networks                     | Backups                                                    | HA                     |
+|-----:|-----------------------------------------------------------------|------------------------------------------------------|------------------------------|------------------------------------------------------------|------------------------|
+| 6    | i5-6300U ×2, i5-3337U ×2, i7-7500U ×1, FX-8350 ×1 / **88 GB** RAM | 256+256+128+128+512+500 GB ≈ **1.78 TB**             | `vmbr0` flat (`10.0.0.0/24`) | vzdump → **NAS01**, Sun 03:00, keep monthly: 2, ZSTD       | No (manual migrations) |
 
-**Use cases:** Mealie, Home Assistant, ATAK server, Ubuntu Jump Station, SmokePing, Zabbix, WireGuard, Wazuh, Omada SDN Controller, Chicken Coop Zigbee (MQTT), n8n.
+**Use cases:** Mealie, Home Assistant, ATAK server, Ubuntu Jump Station, SmokePing, Zabbix, WireGuard, Wazuh, Omada SDN Controller, OctoPrint, MQTT sensor node, n8n, Vaultwarden, Graylog, Cribl, Vulnerability Scanning.
 
 ---
 
@@ -59,19 +59,26 @@ Fill the placeholders in <angle brackets>. Remove sections you don’t need.
 | PVE03 | 10.0.0.142 | 4     | i5-3337U  | 4        | 128      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
 | PVE04 | 10.0.0.144 | 4     | i5-3337U  | 4        | 128      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
 | PVE05 | 10.0.0.145 | 4     | i7-7500U  | 16       | 512      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
+| PVE06 | 10.0.0.146 | 8     | FX-8350   | 32       | 500      | `<1G / USB 2.5G>` | Hypervisor | Local **LVM** on single SSD            | Y           |
 
 ### VMs / Services (Summary)
 
-| Node | IP         | Name     | Service / Purpose          |
-|:----:|------------|----------|----------------------------|
-| TBD  | 10.0.0.128 | VMHA01   | HomeAssistant VM           |
-| TBD  | 10.0.0.129 | VMTAK01  | ATAK Server                |
-| TBD  | 10.0.0.130 | VMJS01   | Ubuntu Jump Station        |
-| TBD  | 10.0.0.132 | CTSP01   | Smoke Ping Server          |
-| TBD  | 10.0.0.133 | VMZAB01  | Zabbix                     |
-| TBD  | 10.0.0.134 | VMWG01   | Wireguard                  |
-| TBD  | 10.0.0.136 | CTOMD01  | Omada SDN Controller       |
-| TBD  | 10.0.0.138 | VMN8N    | N8N Server                 |
+| Node | IP         | Name      | Service / Purpose                          |
+|:----:|------------|-----------|--------------------------------------------|
+| TBD  | 10.0.0.124 | VMVLT01   | Vaultwarden                                |
+| TBD  | 10.0.0.125 | VMHAP01   | HAProxy                                    |
+| TBD  | 10.0.0.126 | VMMON01   | Net Mon                                    |
+| TBD  | 10.0.0.127 | VMINV01   | Asset Inventory Discovery                   |
+| TBD  | 10.0.0.128 | VMHA01    | HomeAssistant VM                            |
+| TBD  | 10.0.0.129 | VMTAK01   | ATAK Server                                 |
+| TBD  | 10.0.0.130 | VMJS01    | Ubuntu Jump Station                         |
+| TBD  | 10.0.0.132 | CTSP01    | Smoke Ping Server                           |
+| TBD  | 10.0.0.133 | VMGRAY01  | Graylog                                     |
+| TBD  | 10.0.0.134 | VMWG01    | WireGuard                                   |
+| TBD  | 10.0.0.135 | VMCRIB01  | Cribl                                       |
+| TBD  | 10.0.0.136 | CTOMD01   | Omada SDN Controller                         |
+| TBD  | 10.0.0.138 | VMN8N     | n8n Server                                  |
+| TBD  | 10.0.0.139 | VMVULN01  | Vulnerability Scanning                       |
 
 ---
 
@@ -88,6 +95,7 @@ Fill the placeholders in <angle brackets>. Remove sections you don’t need.
 | PVE03 | SanDisk_SDSG2128G1052E     | 128 GB | BIOS boot, EFI, **LVM PV** | `pve`        | `local-lvm` (thin) |
 | PVE04 | TOSHIBA_THNSNJ128GDNJ      | 128 GB | BIOS boot, EFI, **LVM PV** | `pve`        | `local-lvm` (thin) |
 | PVE05 | SanDisk_SD8SN8U-512G       | 512 GB | BIOS boot, EFI, **LVM PV** | `pve`        | `local-lvm` (thin) |
+| PVE06 | Samsung_SSD_850_EVO_500GB  | 500 GB | BIOS boot, EFI, **LVM PV** | `pve`        | `local-lvm` (thin) |
 
 **Guardrail:** Alert if `local-lvm` (thin pool) free **<20%** to avoid “out of space” VM pauses.
 
